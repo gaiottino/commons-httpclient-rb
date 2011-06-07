@@ -10,6 +10,7 @@ module Apache
   import org.apache.commons.httpclient.HttpStatus
   import org.apache.commons.httpclient.HttpClient
   import org.apache.commons.httpclient.methods.GetMethod
+  import org.apache.commons.httpclient.methods.PostMethod
 end
 
 module Commons
@@ -34,6 +35,10 @@ module Commons
     
     def get(url, headers = {})
       request(Apache::GetMethod, url, @redirect_limit)
+    end
+
+    def post(url, headers = {})
+      request(Apache::PostMethod, url, @redirect_limit)
     end
     
   private
@@ -70,6 +75,7 @@ module Commons
           result.content_type = content_type ? content_type.value : 'unknown'
         else
           result.status = status
+          result.content = method.response_body_as_stream.to_io.read
         end
         
         result
